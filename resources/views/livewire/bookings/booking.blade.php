@@ -1,65 +1,74 @@
-<div wire:poll.10s> {{-- Tambahkan wire:poll di div utama untuk refresh otomatis --}}
+<div wire:poll.10s class="min-h-screen bg-black text-neutral-800 font-[Anton] py-10 px-4 md:px-8 tracking-wide">
 
     {{-- ======================================================== --}}
-    {{-- ============ BAGIAN BARU UNTUK INFO ANTRIAN ============ --}}
+    {{-- ============ INFO ANTRIAN (TOTAL & SEDANG DILAYANI) ==== --}}
     {{-- ======================================================== --}}
-    <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+    <div class="max-w-3xl mx-auto mb-10 bg-white border border-gray-200 shadow-md p-6 flex flex-col sm:flex-row items-center justify-around text-center">
         <div>
-            <h2 style="font-size: 1em; color: #555;">TOTAL ANTRIAN</h2>
-            <p style="font-size: 2.5em; font-weight: bold;">{{ $totalAntrian }}</p>
+            <h2 class="text-sm text-gray-500 mb-2">TOTAL ANTRIAN</h2>
+            <p class="text-5xl text-black">{{ $totalAntrian }}</p>
         </div>
         <div>
-            <h2 style="font-size: 1em; color: #555;">SEDANG DILAYANI</h2>
-            <p style="font-size: 2.5em; font-weight: bold; color: green;">{{ $nomorDilayani }}</p>
+            <h2 class="text-sm text-gray-500 mb-2">SEDANG DILAYANI</h2>
+            <p class="text-5xl text-green-600">{{ $nomorDilayani }}</p>
         </div>
     </div>
-    {{-- ======================================================== --}}
-    {{-- ======================= AKHIR BAGIAN BARU ======================= --}}
-    {{-- ======================================================== --}}
 
-
-    {{-- Tampilkan ini jika user SUDAH mengambil nomor --}}
+    {{-- ======================================================== --}}
+    {{-- ================= NOMOR ANTRIAN USER ================== --}}
+    {{-- ======================================================== --}}
     @if ($nomorAntrianAnda)
-        <div style="text-align: center; background-color: #e0ffe0; padding: 20px; border-radius: 10px;">
-            <h2>Nomor Antrian Anda:</h2>
-            <h1 style="font-size: 4em; margin: 0;">{{ $nomorAntrianAnda }}</h1>
-            <p>Terima kasih telah melakukan booking. Silakan tunggu giliran Anda.</p>
+        <div class="max-w-2xl mx-auto bg-yellow-500 border border-yellow-300 text-center p-6 shadow-sm">
+            <h2 class="text-xl mb-4 text-black">Nomor Antrian Anda</h2>
+            <h1 class="text-7xl text-black">{{ $nomorAntrianAnda }}</h1>
+            <p class="mt-4 text-black text-sm">Terima kasih telah melakukan booking. <br>Silakan tunggu giliran Anda.</p>
         </div>
 
-        {{-- Tampilkan ini jika user BELUM mengambil nomor --}}
+        {{-- ======================================================== --}}
+        {{-- ============ FORM AMBIL NOMOR ANTRIAN ================== --}}
+        {{-- ======================================================== --}}
     @else
-        <h1>INI ADALAH HALAMAN BOOKING</h1>
+        <div class="max-w-xl mx-auto bg-white border border-gray-200  shadow-md p-8 text-center">
+            <h1 class="text-3xl text-black mb-8">Ambil Nomor Antrian</h1>
 
-        {{-- Bungkus semua field dengan tag <form> --}}
-        <form wire:submit.prevent="submit">
-            <flux:field>
-                <flux:label badge="Required">Nama</flux:label>
+            <form wire:submit.prevent="submit" class="space-y-6 text-left">
+                <flux:field>
+                    <flux:label>Nama</flux:label>
 
-                {{-- Tambahkan wire:model="name" untuk menghubungkan ke properti $name --}}
-                <flux:input type="name" required wire:model="name" />
+                    {{-- Tambahkan wire:model="name" untuk menghubungkan ke properti $name --}}
+                    <flux:input type="name" required wire:model="name" />
 
-                {{-- Livewire akan otomatis menampilkan error di sini jika nama 'name' cocok --}}
-                @error('name') <span style="color: red; font-size: 0.9em;">{{ $message }}</span> @enderror
-            </flux:field>
+                    {{-- Livewire akan otomatis menampilkan error di sini jika nama 'name' cocok --}}
+                    @error('name') <span style="color: red; font-size: 0.9em;">{{ $message }}</span> @enderror
+                </flux:field>
 
-            <flux:field>
-                <flux:label badge="Required">Whatsapp</flux:label>
+                <flux:field>
+                    <flux:label>Whatsapp</flux:label>
 
-                {{-- Tambahkan wire:model="phone" untuk menghubungkan ke properti $phone --}}
-                <flux:input type="phone" placeholder="081214284283" wire:model="phone" />
+                    {{-- Tambahkan wire:model="phone" untuk menghubungkan ke properti $phone --}}
+                    <flux:input type="phone" placeholder="081214284283" wire:model="phone" />
 
-                @error('phone') <span style="color: red; font-size: 0.9em;">{{ $message }}</span> @enderror
-            </flux:field>
+                    @error('phone') <span style="color: red; font-size: 0.9em;">{{ $message }}</span> @enderror
+                </flux:field>
 
-            {{-- Tambahkan tombol untuk mengirim form --}}
-            <button type="submit" style="margin-top: 20px; padding: 10px 15px;">
-                Ambil Nomor Antrian
-            </button>
+                {{-- Tombol Submit --}}
+                <div class="pt-4 text-center">
+                    <button type="submit"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-3 rounded-lg text-lg tracking-wide transition-all shadow-md">
+                        Ambil Nomor Antrian
+                    </button>
+                </div>
 
-            {{-- Untuk menampilkan pesan error umum --}}
-            @if (session()->has('error'))
-                <div style="color: red; margin-top: 10px;">{{ session('error') }}</div>
-            @endif
-        </form>
+                {{-- Pesan Error --}}
+                @if (session()->has('error'))
+                    <div class="text-red-500 text-sm mt-4 text-center">{{ session('error') }}</div>
+                @endif
+            </form>
+        </div>
     @endif
+
+    <footer class="bg-black text-neutral-400 text-center py-8">
+        <p class="text-sm">© {{ date('Y') }} LETSCUT Barber. 2025 <strong>Takalar</strong>.</p>
+    </footer>
 </div>
+
